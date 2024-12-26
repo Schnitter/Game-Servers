@@ -1,1 +1,2 @@
-# Game-Servers
+# GameServer
+a Collection of Gameserver
