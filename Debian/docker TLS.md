@@ -7,7 +7,7 @@ This tutorial is about managing a Docker Engine remotely using Portainer connect
 	Certificates
 	You need to install OpenSSL to follow the following steps. I will not go deep into this topic because there are plenty of tutorial about this, that you can find on Google.
  
-##Server
+## Server
 To create the CA key and the CA certificate type the following on your terminal:
 ```bash
 mkdir \.cert
