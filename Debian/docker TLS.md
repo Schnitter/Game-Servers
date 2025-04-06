@@ -14,14 +14,19 @@ md \.cert
 cd \.cert
 ```
 
+```
 export HOST=<your-domain-name>
+```
 
-
+```
 openssl genrsa -aes256 -out ca-key.pem 4096
+```
 
 # enter a pass phrase to protect the ca-key
 
+```
 openssl req -new -x509 -days 9999 -key ca-key.pem -sha256 -out ca.pem
+```
 
 
 	Change <your-domain-name> for the internal/external domain name, where the Docker Engine is running. You can change the valid days (-days 365). Normally for internal certificates, "9999-days" could be a too short period and you'll need to re-new often the certificates, which also means more security but, it can be annoying!. Enter the information asked (Country, State, City, Organization, Common Name & Email) and for the Common Name option use the environmental variable $HOST
