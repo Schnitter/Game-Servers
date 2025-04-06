@@ -18,6 +18,8 @@ cd \.cert
 export HOST=<your-domain-name>
 ```
 
+Note: please change
+
 ```
 openssl genrsa -aes256 -out ca-key.pem 4096
 ```
