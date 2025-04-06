@@ -91,7 +91,7 @@ chmod -v 0400 ca-key.pem key.pem server-key.pem
 chmod -v 0444 ca.pem server-cert.pem cert.pem
 ```
 
-Remote API
+## Remote API
 Copy the ca.pem, server-cert.pem and server-key.pem files to a folder that you won't remove e.g. ~/.certs
 
 ```
@@ -121,10 +121,12 @@ ExecStart=/usr/bin/dockerd --tlsverify --tlscacert=/root/.certs/ca.pem --tlscert
 In my case, I managed the Docker Engine of a Raspberry Pi from a Portainer instance running on my PC. Thus, the path to the certificates started with /home/pi/ as you see above.
 Then, reload the unit files and restart the Docker daemon with the new startup options:
 
+```
 sudo systemctl daemon-reload
 sudo systemctl restart docker.service
+```
 
-Deploy Portainer
+## Deploy Portainer
 To remotely connect to the Docker socket protected with TLS, you only need the (ca.pem), cert.pem and key.pem files. If you don't have Portainer installed follow the instructions on this article.
 Go to the Portainer web interface, log in and then click on Endpoints (left menu) > + Add Endpoint and select the option Docker (Docker environment). Complete only the endpoint Name, and Endpoint URL (in my case 193.164.131.76:2376 -don't forget the port :2376!) and activate the TLS switch (see Fig. 1). This enables 4 options, you can choose between both first options:
 •	TLS with server and client verification (Use client certificates and server verification): upload the TLS CA Certificate ca.pem, TLS certificate cert.pem and the TLS key key.pem.
