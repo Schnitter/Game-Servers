@@ -46,62 +46,77 @@ Since TLS connections can be made through IP-address as well as DNS name ($HOST)
 echo subjectAltName = DNS:$HOST,IP: 194.163.136.66,IP:127.0.0.1 >> extfile.cnf
 ```
 
+Set the Docker daemon key’s extended usage attributes to be used only for server authentication:
 
-
-	Set the Docker daemon key’s extended usage attributes to be used only for server authentication:
-	
+```
 echo extendedKeyUsage = serverAuth >> extfile.cnf
+```
 
-	Finally, generate the server signed certificate:
+Finally, generate the server signed certificate:
 
+```
 openssl x509 -req -days 9999 -sha256 -in server.csr -CA ca.pem -CAkey ca-key.pem \
   -CAcreateserial -out server-cert.pem -extfile extfile.cnf
-  
-	Again, you can change the valid days (-days 9999).
+  ```
+Again, you can change the valid days (-days 9999).
 
 
-	Client
-	For client authentication, create a client key and certificate signing request using the following lines:
+###Client
+For client authentication, create a client key and certificate signing request using the following lines:
+
+```
 openssl genrsa -out key.pem 4096
+```
 
+```
 openssl req -subj '/CN=client' -new -key key.pem -out client.csr
+```
 
-	To make the key suitable for client authentication, create a new extensions config file:
-	
+To make the key suitable for client authentication, create a new extensions config file:
+
+```
 echo extendedKeyUsage = clientAuth > extfile-client.cnf
+```
 
-	Finally, generate the client signed certificate:
+Finally, generate the client signed certificate:
 	
-	
+```	
 openssl x509 -req -days 9999 -sha256 -in client.csr -CA ca.pem -CAkey ca-key.pem \
   -CAcreateserial -out cert.pem -extfile extfile-client.cnf
-  
-	Optional: You can protect your keys from accidental damage, removing their write permissions. Moreover, certificates can be world-readable, but you might want to remove write access to prevent accidental damage:
+```  
+Optional: You can protect your keys from accidental damage, removing their write permissions. Moreover, certificates can be world-readable, but you might want to remove write access to prevent accidental damage:
+
+```
 chmod -v 0400 ca-key.pem key.pem server-key.pem
 chmod -v 0444 ca.pem server-cert.pem cert.pem
+```
 
-	Remote API
-	Copy the ca.pem, server-cert.pem and server-key.pem files to a folder that you won't remove e.g. ~/.certs
+Remote API
+Copy the ca.pem, server-cert.pem and server-key.pem files to a folder that you won't remove e.g. ~/.certs
 
-
+```
 chmod -v 0444 ca.pem server-cert.pem cert.pe
 cp ca.pem ~/.certs
 cp server-cert.pem ~/.certs
 cp server-key.pem ~/.certs
+```
 
-	Then, create the file startup_options.conf and its path if they don't exist:
+Then, create the file startup_options.conf and its path if they don't exist:
 
+```
 mkdir -p /etc/systemd/system/docker.service.d/
 sudo nano /etc/systemd/system/docker.service.d/startup_options.conf
+```
 
-	and put the following text inside that file:
+and put the following text inside that file:
 
 
+```
 # /etc/systemd/system/docker.service.d/override.conf
 [Service]
 ExecStart=
 ExecStart=/usr/bin/dockerd --tlsverify --tlscacert=/root/.certs/ca.pem --tlscert=/root/.certs/server-cert.pem --tlskey=/root/.certs/server-key.pem -H fd:// -H tcp://0.0.0.0:2376 
-
+```
 
 In my case, I managed the Docker Engine of a Raspberry Pi from a Portainer instance running on my PC. Thus, the path to the certificates started with /home/pi/ as you see above.
 Then, reload the unit files and restart the Docker daemon with the new startup options:
