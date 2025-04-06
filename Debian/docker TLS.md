@@ -22,7 +22,7 @@ export HOST=<your-domain-name>
 openssl genrsa -aes256 -out ca-key.pem 4096
 ```
 
-# enter a pass phrase to protect the ca-key
+enter a pass phrase to protect the ca-key
 
 ```
 openssl req -new -x509 -days 9999 -key ca-key.pem -sha256 -out ca.pem
