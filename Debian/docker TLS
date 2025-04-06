@@ -8,8 +8,12 @@
 	You need to install OpenSSL to follow the following steps. I will not go deep into this topic because there are plenty of tutorial about this, that you can find on Google.
 	Server
 	To create the CA key and the CA certificate type the following on your terminal:
-
+```bash
 cd \
+md \.cert
+cd \.cert
+```
+
 export HOST=<your-domain-name>
 
 
