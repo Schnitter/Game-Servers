@@ -29,18 +29,24 @@ openssl req -new -x509 -days 9999 -key ca-key.pem -sha256 -out ca.pem
 ```
 
 
-	Change <your-domain-name> for the internal/external domain name, where the Docker Engine is running. You can change the valid days (-days 365). Normally for internal certificates, "9999-days" could be a too short period and you'll need to re-new often the certificates, which also means more security but, it can be annoying!. Enter the information asked (Country, State, City, Organization, Common Name & Email) and for the Common Name option use the environmental variable $HOST
+Change <your-domain-name> for the internal/external domain name, where the Docker Engine is running. You can change the valid days (-days 365). Normally for internal certificates, "9999-days" could be a too short period and you'll need to re-new often the certificates, which also means more security but, it can be annoying!. Enter the information asked (Country, State, City, Organization, Common Name & Email) and for the Common Name option use the environmental variable $HOST
 	Now create a server key and certificate signing request (CSR) typing:
 
-
+```
 openssl genrsa -out server-key.pem 4096
+```
 
+```
 openssl req -subj "/CN=$HOST" -sha256 -new -key server-key.pem -out server.csr
+```
 
-	Since TLS connections can be made through IP-address as well as DNS name ($HOST), you can add IP-addresses (e.g. localhost and network) when creating the certificate. In the following case, I added the 193.164.131.76 (network) and 127.0.0.1 (localhost) as example:
+Since TLS connections can be made through IP-address as well as DNS name ($HOST), you can add IP-addresses (e.g. localhost and network) when creating the certificate. In the following case, I added the 193.164.131.76 (network) and 127.0.0.1 (localhost) as example:
 
+```
 echo subjectAltName = DNS:$HOST,IP: 194.163.136.66,IP:127.0.0.1 >> extfile.cnf
-echo subjectAltName = DNS:$HOST,IP: 193.164.131.76,IP:127.0.0.1 >> extfile.cnf
+```
+
+
 
 	Set the Docker daemon key’s extended usage attributes to be used only for server authentication:
 	
