@@ -10,7 +10,6 @@ This tutorial is about managing a Docker Engine remotely using Portainer connect
 ## Server
 To create the CA key and the CA certificate type the following on your terminal:
 ```bash
-cd /
 mkdir \.cert
 cd \.cert
 ```
